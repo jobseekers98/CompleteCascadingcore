@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CascadeDropdwon.Models.Country>
+
+@{
+    ViewData["Title"] = "CascadeList";
+}
+
+<h1>Cascade List</h1>
+<form>
+    <select id="CountryList" asp-items="@ViewBag.Countries">
+        <option value="-1">Select Country</option>
+    </select>
+    <select id="StateList">
+        
+    </select>
+    <button onclick="Hello()">Hello</button>
+    
+</form>
+@section Scripts{ 
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#CountryList").on("change", function () {
+                $.ajax({
+                    type: "Post",
+                    url: "/Cascade/LoadState",
+                    data: { "CountryId": $("#CountryList").val() },
+                    
+                    success: function (response) {
+                        var items = '';
+                        $(response).each(function () {
+                            items += "<option value=" + this.value + ">" + this.text + "</option>";
+                        })
+                        $("#StateList").html(items);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            })
+        });
+    </script>
+}
